@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vmp
+  labels:
+    app: vmp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vmp
+  template:
+    metadata:
+      labels:
+        app: vmp
+    spec:
+      containers:
+        - name: vmp
+          image: "dvonthenen/vsphere-metrics-prometheus:latest"
+          imagePullPolicy: Always
+          env:
+            - name: VSPHERE_HOSTNAME
+              value: "ENTER VCENTER FQDN"
+            - name: VSPHERE_USERNAME
+              value: "ENTER VCENTER USERNAME"
+            - name: VSPHERE_PASSWORD
+              value: "ENTER VCENTER PASSWORD"
+            - name: VSPHERE_INSECURE
+              value: "true"
