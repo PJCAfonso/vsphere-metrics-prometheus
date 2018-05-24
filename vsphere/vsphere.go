@@ -18,15 +18,22 @@ package vsphere
 
 import (
 	"context"
+	"errors"
 	"net/url"
 	"strconv"
 
 	log "github.com/sirupsen/logrus"
 
 	"github.com/vmware/govmomi"
+	"github.com/vmware/govmomi/vim25/mo"
 	"github.com/vmware/govmomi/vim25/soap"
 
 	config "github.com/dvonthenen/vsphere-metrics-prometheus/config"
+)
+
+var (
+	//ErrClientParamsNil - The govmomi client parameters are nil. Need to re-init.
+	ErrClientParamsNil = errors.New("The govmomi client parameters are nil. Need to re-init")
 )
 
 //Client representation for a REST API server
@@ -63,23 +70,34 @@ func (c *Client) RegisterMetrics() error {
 	return nil
 }
 
-/*
-func (s *RestServer) IsSessionValid(t *testing.T, c *Client) {
-	var mgr mo.SessionManager
+//IsValid returns an error it
+func (c *Client) IsValid() error {
+	log.Debugln("IsSessionValid ENTER")
 
-	err := mo.RetrieveProperties(context.Background(), c, c.ServiceContent.PropertyCollector, *c.ServiceContent.SessionManager, &mgr)
-	if err != nil {
-		t.Fatal(err)
+	if c.vClient == nil || c.ctx == nil {
+		log.Debugln("IsSessionValid Failed. client or ctx is nil")
+		log.Debugln("IsSessionValid LEAVE")
+		return ErrClientParamsNil
 	}
+
+	var mgr mo.SessionManager
+	err := mo.RetrieveProperties(context.Background(), c.vClient, c.vClient.ServiceContent.PropertyCollector, *c.vClient.ServiceContent.SessionManager, &mgr)
+	if err != nil {
+		log.Debugln("IsSessionValid Failed:", err)
+		log.Debugln("IsSessionValid LEAVE")
+		return err
+	}
+
+	log.Debugln("IsSessionValid Succeeded")
+	log.Debugln("IsSessionValid LEAVE")
+	return nil
 }
-*/
 
 func (c *Client) getClient() error {
 	log.Debugln("getClient ENTER")
 
 	// Does a connection already exist? Then reuse it!
-	if c.vClient != nil {
-		//TODO test and reconnect
+	if c.vClient != nil && c.IsValid() == nil {
 		log.Infoln("Reusing vSphere Client")
 		log.Debugln("getClient LEAVE")
 		return nil

@@ -43,7 +43,7 @@ func (c *Client) registerEsxMetrics() error {
 	// Create client
 	err := c.getClient()
 	if err != nil {
-		log.Errorln("getVsphereClient failed:", err)
+		log.Errorln("getClient failed:", err)
 		log.Debugln("registerEsxMetrics LEAVE")
 
 		return err
@@ -98,7 +98,7 @@ func (c *Client) GetVSphereEsxStats(w http.ResponseWriter, r *http.Request) erro
 	err := c.getClient()
 	if err != nil {
 		http.Error(w, "Unable connect to the vCenter Server", http.StatusGone)
-		log.Errorln("getVsphereClient failed:", err)
+		log.Errorln("getClient failed:", err)
 		log.Debugln("GetVSphereEsxStats LEAVE")
 
 		return err
