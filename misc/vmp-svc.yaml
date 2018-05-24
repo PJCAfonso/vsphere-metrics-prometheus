@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: vmp
+  name: vmp
+spec:
+  type: NodePort
+  ports:
+    - port: 9444
+      protocol: TCP
+      targetPort: 9444
+  selector:
+    app: vmp
