@@ -65,6 +65,13 @@ func (c *Client) RegisterMetrics() error {
 		return err
 	}
 
+	err = c.registerDatastoreMetrics()
+	if err != nil {
+		log.Debugln("registerDatastoreMetrics Failed:", err)
+		log.Debugln("RegisterMetrics LEAVE")
+		return err
+	}
+
 	log.Debugln("RegisterMetrics Succeeded")
 	log.Debugln("RegisterMetrics LEAVE")
 	return nil
