@@ -69,6 +69,13 @@ func NewRestServer(cfg *config.Config) *RestServer {
 		}
 		promhttp.Handler().ServeHTTP(w, r)
 	}).Methods("GET")
+	mux.HandleFunc("/datacenter/{datacenter}/vm/{vm}/metrics", func(w http.ResponseWriter, r *http.Request) {
+		err := restServer.vClient.GetVSphereVMStats(w, r)
+		if err != nil {
+			log.Errorln("GetVSphereVMStats Failed:", err)
+		}
+		promhttp.Handler().ServeHTTP(w, r)
+	}).Methods("GET")
 
 	server := negroni.Classic()
 	server.UseHandler(mux)
