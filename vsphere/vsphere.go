@@ -72,6 +72,13 @@ func (c *Client) RegisterMetrics() error {
 		return err
 	}
 
+	err = c.registerVMMetrics()
+	if err != nil {
+		log.Debugln("registerVMMetrics Failed:", err)
+		log.Debugln("RegisterMetrics LEAVE")
+		return err
+	}
+
 	log.Debugln("RegisterMetrics Succeeded")
 	log.Debugln("RegisterMetrics LEAVE")
 	return nil
