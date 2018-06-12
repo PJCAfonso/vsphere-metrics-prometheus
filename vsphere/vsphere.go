@@ -84,7 +84,7 @@ func (c *Client) RegisterMetrics() error {
 	return nil
 }
 
-//IsValid returns an error it
+//IsValid returns an error if the connection isnt valid
 func (c *Client) IsValid() error {
 	log.Debugln("IsSessionValid ENTER")
 
@@ -107,15 +107,40 @@ func (c *Client) IsValid() error {
 	return nil
 }
 
+//Logout performs a logout of the govmomi client
+func (c *Client) Logout() {
+	log.Debugln("Logout ENTER")
+
+	if c.vClient == nil || c.ctx == nil {
+		log.Debugln("client or ctx is nil. No need to logout.")
+		log.Debugln("Logout LEAVE")
+		return
+	}
+
+	err := c.vClient.Logout(*c.ctx)
+	if err != nil {
+		log.Warnln("Logout Failed:", err)
+	}
+
+	c.ctx = nil
+	c.vClient = nil
+
+	log.Debugln("Logout Succeeded")
+	log.Debugln("Logout LEAVE")
+}
+
 func (c *Client) getClient() error {
 	log.Debugln("getClient ENTER")
 
 	// Does a connection already exist? Then reuse it!
-	if c.vClient != nil && c.IsValid() == nil {
+	if c.IsValid() == nil {
 		log.Infoln("Reusing vSphere Client")
 		log.Debugln("getClient LEAVE")
 		return nil
 	}
+
+	//Logout out just in case and clear out state in Client
+	c.Logout()
 
 	// Default context
 	ctx := context.Background()
