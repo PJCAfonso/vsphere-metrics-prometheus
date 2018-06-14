@@ -90,9 +90,9 @@ func (c *Client) GetVSphereEsxStats(w http.ResponseWriter, r *http.Request) erro
 
 	vars := mux.Vars(r)
 	datacenterStr := vars["datacenter"]
-	log.Infoln("Datacenter: %v\n", datacenterStr)
+	log.Infoln("Datacenter:", datacenterStr)
 	hostStr := vars["host"]
-	log.Infoln("Host: %v\n", hostStr)
+	log.Infoln("Host:", hostStr)
 
 	// Create client
 	err := c.getClient()
@@ -136,12 +136,12 @@ func (c *Client) GetVSphereEsxStats(w http.ResponseWriter, r *http.Request) erro
 		return err
 	}
 
-	fmt.Println(oHost.Self.Value)
-	fmt.Println(oHost.Summary.Config.Name)
-	fmt.Println(oHost.Summary.Config.Product.Version)
-	fmt.Println(oHost.Summary.Config.Product.Build)
-	fmt.Println(string(oHost.Summary.OverallStatus))
-	fmt.Println(string(oHost.OverallStatus))
+	log.Infoln(oHost.Self.Value)
+	log.Infoln(oHost.Summary.Config.Name)
+	log.Infoln(oHost.Summary.Config.Product.Version)
+	log.Infoln(oHost.Summary.Config.Product.Build)
+	log.Infoln(string(oHost.Summary.OverallStatus))
+	log.Infoln(string(oHost.OverallStatus))
 
 	var performanceManager mo.PerformanceManager
 	err = c.vClient.RetrieveOne(*c.ctx, *c.vClient.ServiceContent.PerfManager, nil, &performanceManager)

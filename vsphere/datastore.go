@@ -30,7 +30,7 @@ import (
 )
 
 const (
-	datastoreFreespace = (iota + 1000)
+	datastoreFreespace = (iota + 1024)
 	datastoreUncommitted
 	datastoreUsedSpace
 	datastoreCapacity
@@ -57,7 +57,7 @@ func (c *Client) registerDatastoreMetrics() error {
 		},
 		[]string{"datacenter", "datastore"},
 	)
-	metricsMapEsx[datastoreFreespace] = myMetric
+	metricsMapDatastore[datastoreFreespace] = myMetric
 	prometheus.MustRegister(myMetric)
 
 	//uncommitted
@@ -73,7 +73,7 @@ func (c *Client) registerDatastoreMetrics() error {
 		},
 		[]string{"datacenter", "datastore"},
 	)
-	metricsMapEsx[datastoreUncommitted] = myMetric
+	metricsMapDatastore[datastoreUncommitted] = myMetric
 	prometheus.MustRegister(myMetric)
 
 	//usedspace
@@ -89,7 +89,7 @@ func (c *Client) registerDatastoreMetrics() error {
 		},
 		[]string{"datacenter", "datastore"},
 	)
-	metricsMapEsx[datastoreUsedSpace] = myMetric
+	metricsMapDatastore[datastoreUsedSpace] = myMetric
 	prometheus.MustRegister(myMetric)
 
 	//capacity
@@ -105,7 +105,7 @@ func (c *Client) registerDatastoreMetrics() error {
 		},
 		[]string{"datacenter", "datastore"},
 	)
-	metricsMapEsx[datastoreCapacity] = myMetric
+	metricsMapDatastore[datastoreCapacity] = myMetric
 	prometheus.MustRegister(myMetric)
 
 	//provisioned
@@ -121,7 +121,7 @@ func (c *Client) registerDatastoreMetrics() error {
 		},
 		[]string{"datacenter", "datastore"},
 	)
-	metricsMapEsx[datastoreProvisioned] = myMetric
+	metricsMapDatastore[datastoreProvisioned] = myMetric
 	prometheus.MustRegister(myMetric)
 
 	log.Debugln("registerDatastoreMetrics Succeeded")
@@ -136,9 +136,9 @@ func (c *Client) GetVSphereDatastoreStats(w http.ResponseWriter, r *http.Request
 
 	vars := mux.Vars(r)
 	datacenterStr := vars["datacenter"]
-	log.Infoln("Datacenter: %v\n", datacenterStr)
+	log.Infoln("Datacenter:", datacenterStr)
 	datastoreStr := vars["datastore"]
-	log.Infoln("VM: %v\n", datastoreStr)
+	log.Infoln("VM:", datastoreStr)
 
 	// Create client
 	err := c.getClient()
@@ -182,9 +182,9 @@ func (c *Client) GetVSphereDatastoreStats(w http.ResponseWriter, r *http.Request
 		return err
 	}
 
-	fmt.Println(oDatastore.Self.Value)
-	fmt.Println(oDatastore.Summary.Name)
-	fmt.Println(oDatastore.Summary.Type)
+	log.Infoln(oDatastore.Self.Value)
+	log.Infoln(oDatastore.Summary.Name)
+	log.Infoln(oDatastore.Summary.Type)
 
 	myMetric := metricsMapDatastore[datastoreFreespace]
 	if myMetric != nil {
