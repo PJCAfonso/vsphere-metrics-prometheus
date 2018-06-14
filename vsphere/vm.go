@@ -30,7 +30,7 @@ import (
 )
 
 const (
-	vmBalloonedMemory = (iota + 1000)
+	vmBalloonedMemory = (iota + 2048)
 	vmCompressedMemory
 	vmConsumedOverheadMemory
 	vmDistributedCpuEntitlement
@@ -371,9 +371,9 @@ func (c *Client) GetVSphereVMStats(w http.ResponseWriter, r *http.Request) error
 
 	vars := mux.Vars(r)
 	datacenterStr := vars["datacenter"]
-	log.Infoln("Datacenter: %v\n", datacenterStr)
+	log.Infoln("Datacenter:", datacenterStr)
 	vmStr := vars["vm"]
-	log.Infoln("VM: %v\n", vmStr)
+	log.Infoln("VM:", vmStr)
 
 	// Create client
 	err := c.getClient()
@@ -417,13 +417,13 @@ func (c *Client) GetVSphereVMStats(w http.ResponseWriter, r *http.Request) error
 		return err
 	}
 
-	fmt.Println(oVM.Self.Value)
-	fmt.Println(oVM.Summary.Config.Name)
-	fmt.Println(oVM.Summary.Config.GuestFullName)
-	fmt.Println(oVM.Summary.Config.GuestId)
-	fmt.Println(oVM.Summary.Config.InstanceUuid)
-	fmt.Println(string(oVM.Summary.OverallStatus))
-	fmt.Println(string(oVM.OverallStatus))
+	log.Infoln(oVM.Self.Value)
+	log.Infoln(oVM.Summary.Config.Name)
+	log.Infoln(oVM.Summary.Config.GuestFullName)
+	log.Infoln(oVM.Summary.Config.GuestId)
+	log.Infoln(oVM.Summary.Config.InstanceUuid)
+	log.Infoln(string(oVM.Summary.OverallStatus))
+	log.Infoln(string(oVM.OverallStatus))
 
 	myMetric := metricsMapVM[vmBalloonedMemory]
 	if myMetric != nil {
