@@ -32,7 +32,7 @@ Initial installation support is *currently* limited within a Kubernetes environm
 
 ### Installation on Kubernetes
 
-Installation on Kubernetes is fairly straightforward. It just requires applying a Kubernetes [deployment](https://github.com/dvonthenen/vsphere-metrics-prometheus/blob/master/misc/vmp-deploy.yml) and [service](https://github.com/dvonthenen/vsphere-metrics-prometheus/blob/master/misc/vmp-svc.yml) for vSphere Metrics for Prometheus. Download the deployment and service YAML files, modify the YAML to include your vCenter Server host and credentials, and run the following commands:
+Installation on Kubernetes is fairly straightforward. It just requires applying a Kubernetes [deployment](https://github.com/dvonthenen/vsphere-metrics-prometheus/blob/master/misc/vmp-deploy.yaml) and [service](https://github.com/dvonthenen/vsphere-metrics-prometheus/blob/master/misc/vmp-svc.yaml) for vSphere Metrics for Prometheus. Download the deployment and service YAML files, modify the YAML to include your vCenter Server host and credentials, and run the following commands:
 
 ```bash
 [vmware@k8master ~]$ kubectl apply -f vmp-svc.yaml
