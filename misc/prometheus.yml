@@ -260,7 +260,7 @@ serverFiles:
             target_label: kubernetes_pod_name
 
 
-      - job_name: 'vsphere-esx'
+      - job_name: 'vsphere-host'
         scheme: http
         scrape_interval: 60s
 
@@ -285,4 +285,58 @@ serverFiles:
             replacement: ${1}
             action: replace
           - source_labels: [__meta_vsphere_esx_name]
+            target_label: instance
+
+      - job_name: 'vsphere-datastore'
+        scheme: http
+        scrape_interval: 60s
+
+        vsphere_sd_configs:
+          - role: datastore
+            vcenter_address: (ENTER VCENTER FQDN)
+            vcenter_username: (ENTER VCENTER USERNAME)
+            vcenter_password: (ENTER VCENTER PASSWORD)
+            vcenter_insecure: true
+            metrics_proxy_address: (NAMING ASSUMING USING K8s SCRIPTS BELOW: vmp.default.svc.cluster.local)
+            metrics_proxy_port: 9444
+
+        relabel_configs:
+          - source_labels: [__meta_vsphere_datastore_metrics_proxy_address]
+            regex: (.+)
+            target_label: __address__
+            replacement: ${1}
+            action: replace
+          - source_labels: [__meta_vsphere_datastore_metrics_proxy_path]
+            regex: (.+)
+            target_label: __metrics_path__
+            replacement: ${1}
+            action: replace
+          - source_labels: [__meta_vsphere_datastore_name]
+            target_label: instance
+
+      - job_name: 'vsphere-virtualmachine'
+        scheme: http
+        scrape_interval: 60s
+
+        vsphere_sd_configs:
+          - role: virtualmachine
+            vcenter_address: (ENTER VCENTER FQDN)
+            vcenter_username: (ENTER VCENTER USERNAME)
+            vcenter_password: (ENTER VCENTER PASSWORD)
+            vcenter_insecure: true
+            metrics_proxy_address: (NAMING ASSUMING USING K8s SCRIPTS BELOW: vmp.default.svc.cluster.local)
+            metrics_proxy_port: 9444
+
+        relabel_configs:
+          - source_labels: [__meta_vsphere_virtual_machine_metrics_proxy_address]
+            regex: (.+)
+            target_label: __address__
+            replacement: ${1}
+            action: replace
+          - source_labels: [__meta_vsphere_virtual_machine_metrics_proxy_path]
+            regex: (.+)
+            target_label: __metrics_path__
+            replacement: ${1}
+            action: replace
+          - source_labels: [__meta_vsphere_virtual_machine_name]
             target_label: instance
