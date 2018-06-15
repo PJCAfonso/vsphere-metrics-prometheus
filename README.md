@@ -12,7 +12,7 @@ TODO: Insert your typical awesome screenshot of it working here :)
 
 ## Compatibility
 
-Compatibility is based on the library [govmomi](https://github.com/vmware/govmomi#compatibility) which currently supports ESXi and vCenter 6.0 and 6.5.
+Compatibility is based on the library [govmomi](https://github.com/vmware/govmomi#compatibility) which currently supports ESXi and vCenter 6.0, 6.5, and 6.7.
 
 govmomi should work with versions 5.5 and 5.1, but neither are officially supported. So in turn, vSphere Metrics for Prometheus should work with 5.5 and 5.1 but support will be best-effort in nature.
 
