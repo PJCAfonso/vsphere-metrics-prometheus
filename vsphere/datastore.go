@@ -39,6 +39,7 @@ const (
 
 var (
 	metricsMapDatastore = make(map[int]*prometheus.GaugeVec)
+	//metricsMapDatastore = make(map[int]*prometheus.Desc)
 )
 
 func (c *Client) registerDatastoreMetrics() error {
@@ -55,7 +56,7 @@ func (c *Client) registerDatastoreMetrics() error {
 			Name:      metricName,
 			Help:      metricName,
 		},
-		[]string{"datacenter", "datastore"},
+		[]string{"datacenter"},
 	)
 	metricsMapDatastore[datastoreFreespace] = myMetric
 	prometheus.MustRegister(myMetric)
@@ -71,7 +72,7 @@ func (c *Client) registerDatastoreMetrics() error {
 			Name:      metricName,
 			Help:      metricName,
 		},
-		[]string{"datacenter", "datastore"},
+		[]string{"datacenter"},
 	)
 	metricsMapDatastore[datastoreUncommitted] = myMetric
 	prometheus.MustRegister(myMetric)
@@ -87,7 +88,7 @@ func (c *Client) registerDatastoreMetrics() error {
 			Name:      metricName,
 			Help:      metricName,
 		},
-		[]string{"datacenter", "datastore"},
+		[]string{"datacenter"},
 	)
 	metricsMapDatastore[datastoreUsedSpace] = myMetric
 	prometheus.MustRegister(myMetric)
@@ -103,7 +104,7 @@ func (c *Client) registerDatastoreMetrics() error {
 			Name:      metricName,
 			Help:      metricName,
 		},
-		[]string{"datacenter", "datastore"},
+		[]string{"datacenter"},
 	)
 	metricsMapDatastore[datastoreCapacity] = myMetric
 	prometheus.MustRegister(myMetric)
@@ -119,10 +120,44 @@ func (c *Client) registerDatastoreMetrics() error {
 			Name:      metricName,
 			Help:      metricName,
 		},
-		[]string{"datacenter", "datastore"},
+		[]string{"datacenter"},
 	)
 	metricsMapDatastore[datastoreProvisioned] = myMetric
 	prometheus.MustRegister(myMetric)
+
+	/*
+		labels := []string{"datacenter", "datastore"}
+
+		//freespace
+		metricName := fmt.Sprintf("%d_freespace_size", datastoreFreespace)
+		log.Debugln("Key:", metricName)
+		myMetric := prometheus.NewDesc(metricName, "freespace size", labels, nil)
+		metricsMapDatastore[int(datastoreFreespace)] = myMetric
+
+		//uncommitted
+		metricName = fmt.Sprintf("%d_uncommitted_size", datastoreUncommitted)
+		log.Debugln("Key:", metricName)
+		myMetric = prometheus.NewDesc(metricName, "uncommitted size", labels, nil)
+		metricsMapDatastore[int(datastoreUncommitted)] = myMetric
+
+		//usedspace
+		metricName = fmt.Sprintf("%d_usedspace_size", datastoreUsedSpace)
+		log.Debugln("Key:", metricName)
+		myMetric = prometheus.NewDesc(metricName, "usedspace size", labels, nil)
+		metricsMapDatastore[int(datastoreUsedSpace)] = myMetric
+
+		//capacity
+		metricName = fmt.Sprintf("%d_capacity_size", datastoreCapacity)
+		log.Debugln("Key:", metricName)
+		myMetric = prometheus.NewDesc(metricName, "capacity size", labels, nil)
+		metricsMapDatastore[int(datastoreCapacity)] = myMetric
+
+		//provisioned
+		metricName = fmt.Sprintf("%d_provisioned_size", datastoreProvisioned)
+		log.Debugln("Key:", metricName)
+		myMetric = prometheus.NewDesc(metricName, "provisioned_size", labels, nil)
+		metricsMapDatastore[int(datastoreProvisioned)] = myMetric
+	*/
 
 	log.Debugln("registerDatastoreMetrics Succeeded")
 	log.Debugln("registerDatastoreMetrics LEAVE")
@@ -138,7 +173,7 @@ func (c *Client) GetVSphereDatastoreStats(w http.ResponseWriter, r *http.Request
 	datacenterStr := vars["datacenter"]
 	log.Infoln("Datacenter:", datacenterStr)
 	datastoreStr := vars["datastore"]
-	log.Infoln("VM:", datastoreStr)
+	log.Infoln("DS:", datastoreStr)
 
 	// Create client
 	err := c.getClient()
@@ -188,24 +223,52 @@ func (c *Client) GetVSphereDatastoreStats(w http.ResponseWriter, r *http.Request
 
 	myMetric := metricsMapDatastore[datastoreFreespace]
 	if myMetric != nil {
-		myMetric.WithLabelValues(datacenterStr, datastoreStr).Set(float64(oDatastore.Summary.FreeSpace))
+		myMetric.WithLabelValues(datacenterStr).Set(float64(oDatastore.Summary.FreeSpace))
 	}
 	myMetric = metricsMapDatastore[datastoreUncommitted]
 	if myMetric != nil {
-		myMetric.WithLabelValues(datacenterStr, datastoreStr).Set(float64(oDatastore.Summary.Uncommitted))
+		myMetric.WithLabelValues(datacenterStr).Set(float64(oDatastore.Summary.Uncommitted))
 	}
 	myMetric = metricsMapDatastore[datastoreUsedSpace]
 	if myMetric != nil {
-		myMetric.WithLabelValues(datacenterStr, datastoreStr).Set(float64((oDatastore.Summary.Capacity - oDatastore.Summary.FreeSpace)))
+		myMetric.WithLabelValues(datacenterStr).Set(float64((oDatastore.Summary.Capacity - oDatastore.Summary.FreeSpace)))
 	}
 	myMetric = metricsMapDatastore[datastoreCapacity]
 	if myMetric != nil {
-		myMetric.WithLabelValues(datacenterStr, datastoreStr).Set(float64(oDatastore.Summary.Capacity))
+		myMetric.WithLabelValues(datacenterStr).Set(float64(oDatastore.Summary.Capacity))
 	}
 	myMetric = metricsMapDatastore[datastoreProvisioned]
 	if myMetric != nil {
-		myMetric.WithLabelValues(datacenterStr, datastoreStr).Set(float64((oDatastore.Summary.Capacity - oDatastore.Summary.FreeSpace + oDatastore.Summary.Uncommitted)))
+		myMetric.WithLabelValues(datacenterStr).Set(float64((oDatastore.Summary.Capacity - oDatastore.Summary.FreeSpace + oDatastore.Summary.Uncommitted)))
 	}
+
+	/*
+		myMetric := metricsMapDatastore[datastoreFreespace]
+		if myMetric != nil {
+			prometheus.MustNewConstMetric(myMetric, prometheus.GaugeValue, float64(oDatastore.Summary.FreeSpace),
+				datacenterStr, datastoreStr)
+		}
+		myMetric = metricsMapDatastore[datastoreUncommitted]
+		if myMetric != nil {
+			prometheus.MustNewConstMetric(myMetric, prometheus.GaugeValue, float64(oDatastore.Summary.Uncommitted),
+				datacenterStr, datastoreStr)
+		}
+		myMetric = metricsMapDatastore[datastoreUsedSpace]
+		if myMetric != nil {
+			prometheus.MustNewConstMetric(myMetric, prometheus.GaugeValue, float64((oDatastore.Summary.Capacity - oDatastore.Summary.FreeSpace)),
+				datacenterStr, datastoreStr)
+		}
+		myMetric = metricsMapDatastore[datastoreCapacity]
+		if myMetric != nil {
+			prometheus.MustNewConstMetric(myMetric, prometheus.GaugeValue, float64(oDatastore.Summary.Capacity),
+				datacenterStr, datastoreStr)
+		}
+		myMetric = metricsMapDatastore[datastoreProvisioned]
+		if myMetric != nil {
+			prometheus.MustNewConstMetric(myMetric, prometheus.GaugeValue, float64((oDatastore.Summary.Capacity - oDatastore.Summary.FreeSpace + oDatastore.Summary.Uncommitted)),
+				datacenterStr, datastoreStr)
+		}
+	*/
 
 	log.Debugln("GetVSphereDatastoreStats Succeeded")
 	log.Debugln("GetVSphereDatastoreStats LEAVE")

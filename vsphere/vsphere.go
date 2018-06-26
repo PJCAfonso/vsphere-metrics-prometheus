@@ -34,6 +34,9 @@ import (
 var (
 	//ErrClientParamsNil - The govmomi client parameters are nil. Need to re-init.
 	ErrClientParamsNil = errors.New("The govmomi client parameters are nil. Need to re-init")
+
+	//ErrDiscoveryTypeNil - TMust select a discovery type. Either: esx, datastore, virtualmachine
+	ErrDiscoveryTypeNil = errors.New("Must select a discovery type. Either: esx, datastore, virtualmachine")
 )
 
 //Client representation for a REST API server
@@ -58,25 +61,36 @@ func NewClient(cfg *config.Config) *Client {
 func (c *Client) RegisterMetrics() error {
 	log.Debugln("RegisterMetrics ENTER")
 
-	err := c.registerEsxMetrics()
-	if err != nil {
-		log.Debugln("registerEsxMetrics Failed:", err)
-		log.Debugln("RegisterMetrics LEAVE")
-		return err
-	}
+	var err error
 
-	err = c.registerDatastoreMetrics()
-	if err != nil {
-		log.Debugln("registerDatastoreMetrics Failed:", err)
+	if c.config.VSphereType == string(config.VSphereRoleEsx) {
+		log.Infoln("Calling registerEsxMetrics")
+		err = c.registerEsxMetrics()
+		if err != nil {
+			log.Debugln("registerEsxMetrics Failed:", err)
+			log.Debugln("RegisterMetrics LEAVE")
+			return err
+		}
+	} else if c.config.VSphereType == string(config.VSphereRoleDatastore) {
+		log.Infoln("Calling registerDatastoreMetrics")
+		err = c.registerDatastoreMetrics()
+		if err != nil {
+			log.Debugln("registerDatastoreMetrics Failed:", err)
+			log.Debugln("RegisterMetrics LEAVE")
+			return err
+		}
+	} else if c.config.VSphereType == string(config.VSphereRoleVirtualMachine) {
+		log.Infoln("Calling registerVMMetrics")
+		err = c.registerVMMetrics()
+		if err != nil {
+			log.Debugln("registerVMMetrics Failed:", err)
+			log.Debugln("RegisterMetrics LEAVE")
+			return err
+		}
+	} else {
+		log.Debugln("RegisterMetrics Failed. Invalid discovery type.")
 		log.Debugln("RegisterMetrics LEAVE")
-		return err
-	}
-
-	err = c.registerVMMetrics()
-	if err != nil {
-		log.Debugln("registerVMMetrics Failed:", err)
-		log.Debugln("RegisterMetrics LEAVE")
-		return err
+		return ErrDiscoveryTypeNil
 	}
 
 	log.Debugln("RegisterMetrics Succeeded")
