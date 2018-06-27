@@ -7,7 +7,7 @@ The vSphere Metrics for Prometheus allows you to scrape metrics for vSphere base
 The vSphere Metrics for Prometheus service interacts with the vSphere Service Discovery (SD) embedded within Prometheus (PR pending) and acts as a proxy to provide metrics on a per vSphere entity basis. The vSphere SD mechanism supports multi-vCenter to multi-datacenters within your vSphere infrastructure. Mechanism to support filtering of individual entities or entire logical groupings exists within this model. Support for other VMware platforms (not just vSphere) can be supported in this model (TBD).
 
 #### Architecture Diagram
-TODO: Insert your typical awesome architecture diagram here :)
+![Architecture Diagram](images/architecture.png)
 
 #### Screenshot
 ![Screen capture](images/vSphereMetrics.png)
