@@ -266,11 +266,11 @@ serverFiles:
 
         vsphere_sd_configs:
           - role: esx
-            vcenter_address: (ENTER VCENTER FQDN)
-            vcenter_username: (ENTER VCENTER USERNAME)
-            vcenter_password: (ENTER VCENTER PASSWORD)
+            vcenter_address: 10.160.221.107
+            vcenter_username: administrator@vsphere.local
+            vcenter_password: Admin!23
             vcenter_insecure: true
-            metrics_proxy_address: (NAMING ASSUMING USING K8s SCRIPTS BELOW: vmp.default.svc.cluster.local)
+            metrics_proxy_address: vmp-esx.default.svc.cluster.local
             metrics_proxy_port: 9444
 
         relabel_configs:
@@ -293,11 +293,11 @@ serverFiles:
 
         vsphere_sd_configs:
           - role: datastore
-            vcenter_address: (ENTER VCENTER FQDN)
-            vcenter_username: (ENTER VCENTER USERNAME)
-            vcenter_password: (ENTER VCENTER PASSWORD)
+            vcenter_address: 10.160.221.107
+            vcenter_username: administrator@vsphere.local
+            vcenter_password: Admin!23
             vcenter_insecure: true
-            metrics_proxy_address: (NAMING ASSUMING USING K8s SCRIPTS BELOW: vmp.default.svc.cluster.local)
+            metrics_proxy_address: vmp-ds.default.svc.cluster.local
             metrics_proxy_port: 9444
 
         relabel_configs:
@@ -320,11 +320,11 @@ serverFiles:
 
         vsphere_sd_configs:
           - role: virtualmachine
-            vcenter_address: (ENTER VCENTER FQDN)
-            vcenter_username: (ENTER VCENTER USERNAME)
-            vcenter_password: (ENTER VCENTER PASSWORD)
+            vcenter_address: 10.160.221.107
+            vcenter_username: administrator@vsphere.local
+            vcenter_password: Admin!23
             vcenter_insecure: true
-            metrics_proxy_address: (NAMING ASSUMING USING K8s SCRIPTS BELOW: vmp.default.svc.cluster.local)
+            metrics_proxy_address: vmp-vm.default.svc.cluster.local
             metrics_proxy_port: 9444
 
         relabel_configs:

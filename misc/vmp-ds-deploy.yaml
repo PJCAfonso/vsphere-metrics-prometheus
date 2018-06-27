@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vmp-ds
+  labels:
+    app: vmp-ds
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vmp-ds
+  template:
+    metadata:
+      labels:
+        app: vmp-ds
+    spec:
+      containers:
+        - name: vmp-ds
+          image: "dvonthenen/vsphere-metrics-prometheus:latest"
+          imagePullPolicy: Always
+          env:
+            - name: VSPHERE_HOSTNAME
+              value: "10.160.221.107"
+            - name: VSPHERE_USERNAME
+              value: "administrator@vsphere.local"
+            - name: VSPHERE_PASSWORD
+              value: "Admin!23"
+            - name: VSPHERE_INSECURE
+              value: "true"
+            - name: VSPHERE_TYPE
+              value: "datastore"
+            - name: LOG_LEVEL
+              value: "Debug"
