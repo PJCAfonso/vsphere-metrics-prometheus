@@ -35,6 +35,7 @@ import (
 
 var (
 	metricsMapEsx = make(map[int]*prometheus.GaugeVec)
+	//metricsMapEsx = make(map[int]*prometheus.Desc)
 )
 
 func (c *Client) registerEsxMetrics() error {
@@ -72,10 +73,16 @@ func (c *Client) registerEsxMetrics() error {
 				Name:      metricName,
 				Help:      metricName,
 			},
-			[]string{"datacenter", "host"},
+			[]string{"datacenter"},
 		)
 		metricsMapEsx[int(perfCounterInfo.Key)] = myMetric
 		prometheus.MustRegister(myMetric)
+
+		/*
+			labels := []string{"datacenter", "esx"}
+			myMetric := prometheus.NewDesc(metricName, nameInfo.Summary, labels, nil)
+			metricsMapEsx[int(perfCounterInfo.Key)] = myMetric
+		*/
 	}
 
 	log.Debugln("registerEsxMetrics Succeeded")
@@ -181,7 +188,8 @@ func (c *Client) GetVSphereEsxStats(w http.ResponseWriter, r *http.Request) erro
 				continue
 			}
 
-			myMetric.WithLabelValues(datacenterStr, hostStr).Set(float64(series.Value[0]))
+			myMetric.WithLabelValues(datacenterStr).Set(float64(series.Value[0]))
+			//prometheus.MustNewConstMetric(myMetric, prometheus.GaugeValue, float64(series.Value[0]), datacenterStr, hostStr)
 		}
 	}
 

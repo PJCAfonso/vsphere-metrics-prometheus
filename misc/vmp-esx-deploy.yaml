@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vmp-esx
+  labels:
+    app: vmp-esx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vmp-esx
+  template:
+    metadata:
+      labels:
+        app: vmp-esx
+    spec:
+      containers:
+        - name: vmp-esx
+          image: "dvonthenen/vsphere-metrics-prometheus:latest"
+          imagePullPolicy: Always
+          env:
+            - name: VSPHERE_HOSTNAME
+              value: "10.160.221.107"
+            - name: VSPHERE_USERNAME
+              value: "administrator@vsphere.local"
+            - name: VSPHERE_PASSWORD
+              value: "Admin!23"
+            - name: VSPHERE_INSECURE
+              value: "true"
+            - name: VSPHERE_TYPE
+              value: "esx"
+            - name: LOG_LEVEL
+              value: "Debug"
