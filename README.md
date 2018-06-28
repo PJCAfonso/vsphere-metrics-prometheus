@@ -68,6 +68,7 @@ Access to Slack requires a [VMware {code} membership](https://code.vmware.com/jo
 This is an initial release not meant for production workloads yet. Some outstanding items to be worked on:
 - Certificate authentication support
 - Supports scale-out and high availability but needs proper documentation
+- Network metrics
 - etc
 
 ## License
