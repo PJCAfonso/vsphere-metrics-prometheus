@@ -20,11 +20,11 @@ spec:
           imagePullPolicy: Always
           env:
             - name: VSPHERE_HOSTNAME
-              value: "10.160.221.107"
+              value: "[REPLACE WITH FQDN]"
             - name: VSPHERE_USERNAME
-              value: "administrator@vsphere.local"
+              value: "[REPLACE WITH USERNAME]"
             - name: VSPHERE_PASSWORD
-              value: "Admin!23"
+              value: "REPLACE WITH PASSWORD"
             - name: VSPHERE_INSECURE
               value: "true"
             - name: VSPHERE_TYPE
