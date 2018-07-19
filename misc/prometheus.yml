@@ -266,9 +266,9 @@ serverFiles:
 
         vsphere_sd_configs:
           - role: esx
-            vcenter_address: 10.160.221.107
-            vcenter_username: administrator@vsphere.local
-            vcenter_password: Admin!23
+            vcenter_address: [REPLACE WITH VCENTER ADDRESS]
+            vcenter_username: [REPLACE WITH VCENTER USERNAME]
+            vcenter_password: [REPLACE WITH VCENTER PASSWORD]
             vcenter_insecure: true
             metrics_proxy_address: vmp-esx.default.svc.cluster.local
             metrics_proxy_port: 9444
@@ -293,9 +293,9 @@ serverFiles:
 
         vsphere_sd_configs:
           - role: datastore
-            vcenter_address: 10.160.221.107
-            vcenter_username: administrator@vsphere.local
-            vcenter_password: Admin!23
+            vcenter_address: [REPLACE WITH VCENTER ADDRESS]
+            vcenter_username: [REPLACE WITH VCENTER USERNAME]
+            vcenter_password: [REPLACE WITH VCENTER PASSWORD]
             vcenter_insecure: true
             metrics_proxy_address: vmp-ds.default.svc.cluster.local
             metrics_proxy_port: 9444
@@ -320,9 +320,9 @@ serverFiles:
 
         vsphere_sd_configs:
           - role: virtualmachine
-            vcenter_address: 10.160.221.107
-            vcenter_username: administrator@vsphere.local
-            vcenter_password: Admin!23
+            vcenter_address: [REPLACE WITH VCENTER ADDRESS]
+            vcenter_username: [REPLACE WITH VCENTER USERNAME]
+            vcenter_password: [REPLACE WITH VCENTER PASSWORD]
             vcenter_insecure: true
             metrics_proxy_address: vmp-vm.default.svc.cluster.local
             metrics_proxy_port: 9444
